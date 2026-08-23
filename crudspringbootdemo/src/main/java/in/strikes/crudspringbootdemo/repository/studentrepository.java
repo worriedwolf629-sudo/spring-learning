@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 public class studentrepository {
 
     public students savestudent(students studentreq) {
-
+        System.out.println("student rep start ");
+        System.out.println("student rep ended  ");
         return null;
     }
 

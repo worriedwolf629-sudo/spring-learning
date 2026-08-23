@@ -14,7 +14,9 @@ public class studentservice {
     }
 
     public students createdstudent(students studentreq) {
+        System.out.println("student service starteed ");
         students respstudents = studentrepository.savestudent(studentreq);
+        System.out.println("student service end ");
         return respstudents;
     }
 
