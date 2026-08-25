@@ -2,6 +2,9 @@ package in.strikes.crudspringbootdemo.controller;
 
 import in.strikes.crudspringbootdemo.entity.students;
 import in.strikes.crudspringbootdemo.service.studentservice;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +22,11 @@ public class studentcontroller {
     }
 
     @PostMapping("/create")
-    public String createstudent(@RequestBody students student) {
+    public ResponseEntity<students>createdstudent(@RequestBody students student) {
         System.out.println("student controller starteed ");
         students createdstudent =studentservice.createdstudent(student);
         System.out.println("student controller end ");
-        return "student is created lol ";
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdstudent);
     }
 
 }
