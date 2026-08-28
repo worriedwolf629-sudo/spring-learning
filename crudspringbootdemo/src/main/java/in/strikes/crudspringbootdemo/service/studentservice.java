@@ -18,6 +18,7 @@ public class studentservice {
     }
 
     public students createdstudent(students studentreq) {
+        studentreq.setDeleted(false);  //so that user cant delete on own
         System.out.println("student service starteed ");
         students respstudents = studentrepository.save(studentreq);
         System.out.println("student service end ");
@@ -25,7 +26,7 @@ public class studentservice {
     }
 
     public students getstudent(long id) {
-        Optional<students> respstudents = studentrepository.findById(id);
+        Optional<students> respstudents = studentrepository.findByIdAndDeletedIsFalse(id);
         if (respstudents.isPresent()) {
             return respstudents.get();
         }
@@ -33,12 +34,12 @@ public class studentservice {
     }
 
     public List<students> getallstudent() {
-        List<students> studentslist = studentrepository.findAll();
+        List<students> studentslist = studentrepository.findByDeletedIsFalse();
         return studentslist;
     }
 
     public students updatestudent(long id, @RequestBody students studentreq ) {
-        Optional<students> existingstudent = studentrepository.findById(id);
+        Optional<students> existingstudent = studentrepository.findByIdAndDeletedIsFalse(id);
         if (existingstudent.isEmpty()) {
             return null;
         }
@@ -47,6 +48,7 @@ public class studentservice {
         savenewdetails.setName(studentreq.getName());
         savenewdetails.setRollnum(studentreq.getRollnum());
         savenewdetails.setSchool(studentreq.getSchool());
+        savenewdetails.setDeleted(false);   //so that user cant delete on own
         return studentrepository.save(savenewdetails);
     }
 
@@ -59,4 +61,7 @@ public class studentservice {
         return null;
     }
 
+    public boolean deletestudentsoftly(long id) {
+        return false;
+    }
 }

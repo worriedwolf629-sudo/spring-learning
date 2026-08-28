@@ -2,13 +2,13 @@ package in.strikes.crudspringbootdemo.controller;
 
 import in.strikes.crudspringbootdemo.entity.students;
 import in.strikes.crudspringbootdemo.service.studentservice;
-import org.hibernate.annotations.NotFound;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/students")
 public class studentcontroller {
@@ -64,6 +64,16 @@ public class studentcontroller {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(deletingpstudent);
+    }
+
+    @PatchMapping("soft-delete/{id}")
+    public ResponseEntity<Boolean> softdelete(@PathVariable long id) {
+        boolean isdeleted = studentservice.deletestudentsoftly(id);
+        if (!isdeleted) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(isdeleted);
+
     }
 
 }
