@@ -1,5 +1,4 @@
 package in.strikes.crudspringbootdemo.service;
-
 import in.strikes.crudspringbootdemo.entity.students;
 import in.strikes.crudspringbootdemo.repository.studentrepository;
 import org.springframework.stereotype.Service;
@@ -52,7 +51,7 @@ public class studentservice {
         return studentrepository.save(savenewdetails);
     }
 
-    public students deletestudent(long id) {
+    public students deletestudent(long id) {              //hard delete
         Optional<students> deletingstudent = studentrepository.findById(id);
         if (deletingstudent.isPresent()) {
             studentrepository.deleteById(id);
@@ -62,6 +61,18 @@ public class studentservice {
     }
 
     public boolean deletestudentsoftly(long id) {
-        return false;
+        Optional<students> existingstudent =
+                studentrepository.findByIdAndDeletedIsFalse(id);  //check is student exist
+         if (existingstudent.isEmpty()) {
+             return false;               //if student dont exist
+         }
+         //if student exist get it and delete it softly(means store in db)
+        students studenttosave = existingstudent.get();
+        studenttosave.setDeleted(true);
+        studentrepository.save(studenttosave);
+        return true;
+    }
+    public List<students> getdeletdstudents() {
+        return studentrepository.findByDeletedTrue();
     }
 }

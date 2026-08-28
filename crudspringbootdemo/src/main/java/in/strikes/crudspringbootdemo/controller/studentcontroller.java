@@ -75,5 +75,9 @@ public class studentcontroller {
         return ResponseEntity.ok(isdeleted);
 
     }
+    @GetMapping("retrieve")
+    public List<students> getdeletedStudents() {
+        return studentservice.getdeletdstudents();
+    }
 
 }
