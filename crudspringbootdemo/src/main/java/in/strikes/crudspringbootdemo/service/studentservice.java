@@ -1,9 +1,12 @@
 package in.strikes.crudspringbootdemo.service;
+import in.strikes.crudspringbootdemo.Dto.CreatedDtoRequest;
+import in.strikes.crudspringbootdemo.Dto.CreatedDtoResponse;
 import in.strikes.crudspringbootdemo.entity.students;
 import in.strikes.crudspringbootdemo.repository.studentrepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,19 +14,23 @@ import java.util.Optional;
 public class studentservice {
 
     public studentrepository studentrepository;
-
     public studentservice(studentrepository studentrepository) {
         this.studentrepository = studentrepository;
     }
 
-    public students createdstudent(students studentreq) {
-        studentreq.setDeleted(false);  //so that user cant delete on own
-        System.out.println("student service starteed ");
-        students respstudents = studentrepository.save(studentreq);
-        System.out.println("student service end ");
-        return respstudents;
-    }
+    public CreatedDtoResponse createdstudent(CreatedDtoRequest dtoRequest) {  //This method says: "Give me a StudentRequestDto, and I will eventually give you a StudentResponseDto."
+        students student = CreatedmapToEntity(dtoRequest);  //mapper class for entity to dto
+        student.setCreatedat(LocalDateTime.now());
+        student.setUpdatedat(LocalDateTime.now());
+        students respstudent = studentrepository.save(student);
+        return CreatedmapToDto(respstudent);
 
+//        studentreq.setDeleted(false);  //so that user cant delete on own
+//        System.out.println("student service starteed ");
+//        students respstudents = studentrepository.save(studentreq);
+//        System.out.println("student service end ");
+//        return respstudents;
+    }
     public students getstudent(long id) {
         Optional<students> respstudents = studentrepository.findByIdAndDeletedIsFalse(id);
         if (respstudents.isPresent()) {
@@ -75,4 +82,32 @@ public class studentservice {
     public List<students> getdeletdstudents() {
         return studentrepository.findByDeletedTrue();
     }
+
+    public students CreatedmapToEntity(CreatedDtoRequest dtoRequest)  {
+        //return type = students & parametre is = CreatedDtoRequest dtoRequest
+        //means= I have a createdDtorequest, and I want to convert it into a Student entity.
+        students student = new students();  //dto to entity to db-storage
+        student.setName(dtoRequest.getName());  //copy name from dto to entity
+        student.setAge(dtoRequest.getAge());
+        student.setRollnum(dtoRequest.getRollnum());
+        student.setSchool(dtoRequest.getSchool());
+        student.setDeleted(false);
+        return student;
+
+    }
+    public CreatedDtoResponse CreatedmapToDto(students student) {
+        // means = I have a Student entity, and I want to convert it into a createdDtoresponse.
+        CreatedDtoResponse respstudent =new CreatedDtoResponse();
+        student.setName(student.getName());
+        respstudent.setName(student.getName());
+        respstudent.setAge(student.getAge());
+        respstudent.setRollnum(student.getRollnum());
+        respstudent.setSchool(student.getSchool());
+        respstudent.setCreatedat(student.getCreatedat());
+        respstudent.setUpdatedat(student.getUpdatedat());
+        respstudent.setMessage("student saved succesfully");
+
+        return respstudent;
+    }
+    
 }

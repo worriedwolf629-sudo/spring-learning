@@ -1,5 +1,7 @@
 package in.strikes.crudspringbootdemo.controller;
 
+import in.strikes.crudspringbootdemo.Dto.CreatedDtoRequest;
+import in.strikes.crudspringbootdemo.Dto.CreatedDtoResponse;
 import in.strikes.crudspringbootdemo.entity.students;
 import in.strikes.crudspringbootdemo.service.studentservice;
 import org.springframework.http.HttpStatus;
@@ -21,10 +23,13 @@ public class studentcontroller {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<students> createdstudent(@RequestBody students student) {
+    public ResponseEntity<CreatedDtoResponse> createdstudent(@RequestBody CreatedDtoRequest dtoRequest) {
+//This means: "When a POST request comes in, take the request body and put it into a CreatedDtoRequest object called dtoRequest."
+
         System.out.println("student controller starteed ");
-        students createdstudent = studentservice.createdstudent(student);
+        CreatedDtoResponse createdstudent = studentservice.createdstudent(dtoRequest);
         System.out.println("student controller end ");
+
         return ResponseEntity.status(HttpStatus.CREATED).body(createdstudent);
     }
 
