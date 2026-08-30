@@ -1,25 +1,14 @@
 package in.strikes.crudspringbootdemo.Dto;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import org.hibernate.mapping.Value;
+import java.time.LocalDateTime;
 
-public class CreatedDtoRequest {
-
-    @NotBlank(message = "name should not be empty pal")
+public class UpdateResponseDTO {
     private String name;
-
-    @Min(value =18,message = "go watch pogo ")
     private int age;
-
-    @NotNull(message = "enter valid num dude")
     private int rollnum;
-
-    @NotEmpty(message = "enter the school name chump")
     private String school;
-
+    private LocalDateTime updatedat;
+    private String message;
 
     public String getName() {
         return name;
@@ -53,5 +42,19 @@ public class CreatedDtoRequest {
         this.school = school;
     }
 
-}
+    public LocalDateTime getUpdatedat() {
+        return updatedat;
+    }
 
+    public void setUpdatedat(LocalDateTime updatedat) {
+        this.updatedat = updatedat;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}

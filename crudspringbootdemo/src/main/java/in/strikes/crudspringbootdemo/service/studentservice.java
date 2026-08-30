@@ -1,6 +1,8 @@
 package in.strikes.crudspringbootdemo.service;
 import in.strikes.crudspringbootdemo.Dto.CreatedDtoRequest;
 import in.strikes.crudspringbootdemo.Dto.CreatedDtoResponse;
+import in.strikes.crudspringbootdemo.Dto.UpdateRequestDto;
+import in.strikes.crudspringbootdemo.Dto.UpdateResponseDTO;
 import in.strikes.crudspringbootdemo.entity.students;
 import in.strikes.crudspringbootdemo.repository.studentrepository;
 import org.springframework.stereotype.Service;
@@ -44,18 +46,20 @@ public class studentservice {
         return studentslist;
     }
 
-    public students updatestudent(long id, @RequestBody students studentreq ) {
+    public UpdateResponseDTO updatestudent(long id, @RequestBody UpdateRequestDto studentreq ) {
         Optional<students> existingstudent = studentrepository.findByIdAndDeletedIsFalse(id);
         if (existingstudent.isEmpty()) {
             return null;
         }
         students savenewdetails = existingstudent.get();
         savenewdetails.setAge(studentreq.getAge());
-        savenewdetails.setName(studentreq.getName());
+        savenewdetails.setName(studentreq.getName());     //only these 3 can be changed
         savenewdetails.setRollnum(studentreq.getRollnum());
-        savenewdetails.setSchool(studentreq.getSchool());
+        savenewdetails.setUpdatedat(LocalDateTime.now());
+//        savenewdetails.setSchool(studentreq.getSchool());
         savenewdetails.setDeleted(false);   //so that user cant delete on own
-        return studentrepository.save(savenewdetails);
+        students savestudent =  studentrepository.save(savenewdetails);
+        return mapToUpdateDto(savestudent);
     }
 
     public students deletestudent(long id) {              //hard delete
@@ -104,6 +108,18 @@ public class studentservice {
         respstudent.setRollnum(student.getRollnum());
         respstudent.setSchool(student.getSchool());
         respstudent.setCreatedat(student.getCreatedat());
+        respstudent.setUpdatedat(student.getUpdatedat());
+        respstudent.setMessage("student saved succesfully");
+
+        return respstudent;
+    }
+    public UpdateResponseDTO mapToUpdateDto(students student) {
+        UpdateResponseDTO respstudent =new UpdateResponseDTO();
+        student.setName(student.getName());
+        respstudent.setName(student.getName());
+        respstudent.setAge(student.getAge());
+        respstudent.setRollnum(student.getRollnum());
+        respstudent.setSchool(student.getSchool());
         respstudent.setUpdatedat(student.getUpdatedat());
         respstudent.setMessage("student saved succesfully");
 

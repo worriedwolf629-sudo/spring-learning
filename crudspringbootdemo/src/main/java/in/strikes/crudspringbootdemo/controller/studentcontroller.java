@@ -2,8 +2,11 @@ package in.strikes.crudspringbootdemo.controller;
 
 import in.strikes.crudspringbootdemo.Dto.CreatedDtoRequest;
 import in.strikes.crudspringbootdemo.Dto.CreatedDtoResponse;
+import in.strikes.crudspringbootdemo.Dto.UpdateRequestDto;
+import in.strikes.crudspringbootdemo.Dto.UpdateResponseDTO;
 import in.strikes.crudspringbootdemo.entity.students;
 import in.strikes.crudspringbootdemo.service.studentservice;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +26,7 @@ public class studentcontroller {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CreatedDtoResponse> createdstudent(@RequestBody CreatedDtoRequest dtoRequest) {
+    public ResponseEntity<CreatedDtoResponse> createdstudent(@Valid  @RequestBody CreatedDtoRequest dtoRequest) {
 //This means: "When a POST request comes in, take the request body and put it into a CreatedDtoRequest object called dtoRequest."
 
         System.out.println("student controller starteed ");
@@ -54,8 +57,8 @@ public class studentcontroller {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<students> updatestudent(@PathVariable long id,@RequestBody students studentreq) {
-        students existingpstudent = studentservice.updatestudent(id, studentreq);
+    public ResponseEntity<UpdateResponseDTO> updatestudent(@PathVariable long id, @RequestBody UpdateRequestDto studentreq) {
+        UpdateResponseDTO existingpstudent = studentservice.updatestudent(id, studentreq);
         if (existingpstudent == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
