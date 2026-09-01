@@ -17,15 +17,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/students")
 public class studentcontroller {
-
-
     private final studentservice studentservice;
-
     public studentcontroller(studentservice studentservice) {
         this.studentservice = studentservice;
     }
 
-    @PostMapping("/create")
+    @PostMapping     //create
     public ResponseEntity<CreatedDtoResponse> createdstudent(@Valid  @RequestBody CreatedDtoRequest dtoRequest) {
 //This means: "When a POST request comes in, take the request body and put it into a CreatedDtoRequest object called dtoRequest."
 
@@ -36,51 +33,46 @@ public class studentcontroller {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdstudent);
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<students> getstudent(@PathVariable long id) {
-        students respstudent = studentservice.getstudent(id);
-        if (respstudent == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+    @GetMapping("{id}")   //read by id
+    public ResponseEntity<CreatedDtoResponse> getstudent(@PathVariable long id) {
+        CreatedDtoResponse respstudent = studentservice.getstudent(id);
+//        if (respstudent == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }   //NOT NEEDED CUZ THIS IS HANDELED BY EXCEPTION HANDLER CLASS
         return ResponseEntity.ok(respstudent);
 
     }
 
-    @GetMapping("getall")
+    @GetMapping       //read all data
     public ResponseEntity<List<students>> getallstudent() {
         List<students> studentlist = studentservice.getallstudent();
-        if (studentlist == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
         return ResponseEntity.ok(studentlist);
 
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("{id}")         //update
     public ResponseEntity<UpdateResponseDTO> updatestudent(@PathVariable long id, @RequestBody UpdateRequestDto studentreq) {
         UpdateResponseDTO existingpstudent = studentservice.updatestudent(id, studentreq);
-        if (existingpstudent == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+//        if (existingpstudent == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }
         return ResponseEntity.ok(existingpstudent);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")     //delete
     public ResponseEntity<students> updatestudent(@PathVariable long id) {
-        students deletingpstudent = studentservice.deletestudent(id);
-        if (deletingpstudent == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok(deletingpstudent);
+        studentservice.deletestudent(id);
+//        if (deletingpstudent == null) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+//        }
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("soft-delete/{id}")
-    public ResponseEntity<Boolean> softdelete(@PathVariable long id) {
-        boolean isdeleted = studentservice.deletestudentsoftly(id);
-        if (!isdeleted) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.ok(isdeleted);
+    public ResponseEntity<String> softdelete(@PathVariable long id) {
+        studentservice.deletestudentsoftly(id);
+
+        return ResponseEntity.noContent().build();
 
     }
     @GetMapping("retrieve")
