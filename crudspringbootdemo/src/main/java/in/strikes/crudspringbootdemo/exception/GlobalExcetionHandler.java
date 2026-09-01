@@ -22,7 +22,6 @@ public class GlobalExcetionHandler {
         ex.getBindingResult().getFieldErrors()
                 .forEach(error ->
                         Fielderrors.put(error.getField(),error.getDefaultMessage()));
-
         ValidationExceptionResponseDto exe = new ValidationExceptionResponseDto(
                 LocalDateTime.now(),
                 HttpStatus.BAD_REQUEST.value(),
@@ -31,9 +30,8 @@ public class GlobalExcetionHandler {
                 request.getRequestURI(),
                 Fielderrors
         );
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exe);
-    }   // THIS CODE WILL GIVE 404 NOT FOUND (MORE SPECIFIC)
+    }
 
 
     @ExceptionHandler(MyException.class)
